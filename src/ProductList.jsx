@@ -2,11 +2,20 @@ import React, { useState, useEffect } from "react";
 import "./ProductList.css";
 import CartItem from "./CartItem";
 import { addItem } from "./CartSlice";
+import { useDispatch, useSelector } from "react-redux";
+
 function ProductList() {
   const [showCart, setShowCart] = useState(false);
   const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
   const [addedToCart, setAddedToCart] = useState({});
 
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cart.items);
+
+  useEffect(() => {}, []);
+  const alreadyInCart = (itemName) => {
+    return cartItems.some((item) => item.name === itemName);
+  };
   const plantsArray = [
     {
       category: "Air Purifying Plants",
@@ -266,7 +275,7 @@ function ProductList() {
   };
   const styleA = {
     color: "white",
-    fontSize: "30px",
+    fontSize: "1.5em",
     textDecoration: "none",
   };
   const handleCartClick = (e) => {
@@ -289,6 +298,9 @@ function ProductList() {
       ...prevState,
       [product.name]: true, // Set the product name as key and value as true to indicate it's added to cart
     }));
+  };
+  const totalItems = () => {
+    return cartItems.reduce((total, item) => total + item.quantity, 0);
   };
   return (
     <div>
@@ -318,6 +330,17 @@ function ProductList() {
             {" "}
             <a href="#" onClick={(e) => handleCartClick(e)} style={styleA}>
               <h1 className="cart">
+                <label
+                  style={{
+                    zIndex: 1,
+                    position: "fixed",
+                    fontSize: "1.5rem",
+                    cursor: "pointer",
+                  }}
+                >
+                  {totalItems()}
+                </label>
+
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 256 256"
@@ -359,12 +382,22 @@ function ProductList() {
                       alt={plant.name}
                     />
                     <div className="product-title">{plant.name}</div>
-                    {/*Similarly like the above plant.name show other details like description and cost*/}
+                    <div className="product-price">{plant.cost}</div>
+                    <p className="product-desc">{plant.description}</p>
+
                     <button
-                      className="product-button"
+                      style={{
+                        backgroundColor: alreadyInCart(plant.name)
+                          ? "gray"
+                          : "#4caf50",
+                      }}
+                      disabled={alreadyInCart(plant.name) ? true : false}
                       onClick={() => handleAddToCart(plant)}
+                      className="product-button"
                     >
-                      Add to Cart
+                      {alreadyInCart(plant.name)
+                        ? "Added to Cart"
+                        : "Add to Cart"}
                     </button>
                   </div>
                 ))}
