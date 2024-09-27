@@ -4,7 +4,7 @@ This project is a small e-commerce website built using React as part of my certi
 
 ## 🚀 Live Demo
 
-Check out the live demo of the website.
+Check out the live demo of the website https://kavitha-ponnusamy.github.io/e-plantShopping/. 
 
 ## 🌟 Features
 
